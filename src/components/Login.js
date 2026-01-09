@@ -1,7 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./Login.css";
+import { useAuth } from "../context/AuthContext";
+import { LogIn, Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
+import { Button } from "./ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +20,7 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,116 +36,140 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/login", {
-        email,
-        password,
-      });
-
-      if (response.status === 200) {
-        const { message, token } = response.data;
-        localStorage.setItem("token", token);
-
-        //show success login message
-        setMessage(message || "Login successful!");
-        setError("");
-
-        //redirect to dashboard after 1 second
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
+      await login({ email, password });
+      setMessage("Login successful!");
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
-      if (err.code === "ERR_NETWORK") {
-        setTimeout(() => {
-          setError(
-            "Network Error: Cannot connect to the backend server at localhost:3000. Is your backend running?"
-          );
-        }, 1000);
-      } else if (err.response) {
-        // The server responded with a status code that falls out of the range of 2xx
-        setError(err.response.data.message || "Invalid email or password");
-      } else {
-        setError("An error occurred. Please try again.");
-      }
-      console.error("Login error:", err);
+      setError(err.response?.data?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="login-header">
-          <h1>Welcome Back</h1>
-          <p>Sign in to your account</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="login-form">
-          {error && <div className="error-message">{error}</div>}
-
-          <div className="form-group">
-            <label htmlFor="email">Email Address</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-            />
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 p-4 sm:p-6 lg:p-8 font-sans">
+      <Card className="w-full max-w-md shadow-xl border-gray-100">
+        <CardHeader className="text-center space-y-4">
+          <div className="mx-auto flex items-center justify-center w-16 h-16 bg-accent-600 rounded-xl shadow-lg shadow-accent-600/20">
+            <LogIn className="w-8 h-8 text-white" />
           </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
+          <div className="space-y-2">
+            <CardTitle className="text-3xl font-bold text-primary-900">
+              Welcome Back
+            </CardTitle>
+            <CardDescription>
+              Sign in to the DE Research Platform
+            </CardDescription>
           </div>
-
-          <div className="form-options">
-            <label className="remember-me">
-              <input type="checkbox" />
-              <span>Remember me</span>
-            </label>
-            <Link to="/forgot-password" className="forgot-password">
-              Forgot password?
-            </Link>
-          </div>
-
-          <button type="submit" className="login-button" disabled={loading}>
-            {loading ? (
-              <>
-                <span className="loading-spinner"></span>
-                <span>Signing In...</span>
-              </>
-            ) : (
-              "Sign In"
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-destructive/10 text-destructive p-4 rounded-xl text-sm border border-destructive/20 animate-in fade-in zoom-in duration-300">
+                {error}
+              </div>
             )}
-          </button>
-          {message && <div className="success-message">{message}</div>}
-        </form>
 
-        <div className="login-footer">
-          <p>
+            {message && (
+              <div className="bg-green-50 text-green-600 p-4 rounded-xl text-sm border border-green-100">
+                {message}
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 left-3 flex items-center pointer-events-none text-muted-foreground">
+                  <Mail className="h-4 w-4" />
+                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@organization.edu"
+                  className="pl-10 h-11 rounded-xl"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-muted-foreground">
+                  <Lock className="h-4 w-4" />
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="pl-10 h-11 rounded-xl"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  className="w-4 h-4 text-accent-600 border-gray-300 rounded focus:ring-accent-600 cursor-pointer"
+                />
+                <Label
+                  htmlFor="remember"
+                  className="text-sm text-gray-600 cursor-pointer"
+                >
+                  Remember me
+                </Label>
+              </div>
+              <Link
+                to="/forgot-password"
+                size="sm"
+                className="text-sm font-medium text-accent-600 hover:text-accent-700 transition-colors"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full h-11 bg-accent-600 hover:bg-accent-700 text-white font-bold rounded-xl shadow-lg shadow-accent-600/30 transition-all transform active:scale-[0.98]"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  Signing in...
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4 pt-4 border-t border-gray-100">
+          <p className="text-gray-600 text-sm">
             Don't have an account?{" "}
-            <Link to="/register" className="signup-link">
-              Sign up
+            <Link
+              to="/register"
+              className="text-accent-600 font-bold hover:text-accent-700 transition-colors"
+            >
+              Join our research community
             </Link>
           </p>
-        </div>
-
-        <div className="back-to-home">
-          <Link to="/" className="back-link">
-            ← Back to Home
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Public Dashboard</span>
           </Link>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

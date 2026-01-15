@@ -10,6 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  CardAction,
 } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -21,7 +22,12 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { login } = useAuth();
+  const {remember, setRemember} = useState(false);
   const navigate = useNavigate();
+
+  const handleRemember = () => {
+    setRemember(!remember);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +42,15 @@ function Login() {
     setLoading(true);
 
     try {
-      await login({ email, password });
+      const response = await login({ email, password });
+      const { token, user } = response.data;
+      if (remember) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+      } else {
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("user", JSON.stringify(user));
+      }
       setMessage("Login successful!");
       setTimeout(() => navigate("/"), 1000);
     } catch (err) {
@@ -118,6 +132,8 @@ function Login() {
                   type="checkbox"
                   id="remember"
                   className="w-4 h-4 text-accent-600 border-gray-300 rounded focus:ring-accent-600 cursor-pointer"
+                  checked={remember}
+                  onChange={handleRemember}
                 />
                 <Label
                   htmlFor="remember"

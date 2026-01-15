@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import FitnessChart from "./FitnessChart";
 import CrossoverNavigation from "./CrossoverNavigation";
@@ -51,7 +52,8 @@ import {
 } from "./ui/dropdown-menu";
 
 function Dashboard() {
-  const [simulations, setSimulations] = useState(mockSimulations);
+  const navigate = useNavigate(); //hook from react router modify url by JS, instead of requiring user to manually click link
+  const [simulations, setSimulations] = useState(mockSimulations);  //mock data only 
   const [filterBenchmark, setFilterBenchmark] = useState("all");
   const [sortConfig, setSortConfig] = useState({
     key: "timestamp",
@@ -171,7 +173,10 @@ function Dashboard() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Button className="bg-accent-600 hover:bg-accent-700 text-white rounded-xl shadow-lg shadow-accent-600/20">
+            <Button
+              onClick={() => navigate("/simulator")}
+              className="bg-accent-600 hover:bg-accent-700 text-white rounded-xl shadow-lg shadow-accent-600/20"
+            >
               <Plus className="w-4 h-4 mr-2" />
               New Simulation
             </Button>

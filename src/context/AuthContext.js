@@ -11,11 +11,13 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      // In a real app, you would verify the token with the backend
-      // and get the user profile. For now, we'll just set a mock user.
-      setUser({ id: "1", name: "Researcher", email: "researcher@example.com" });
-    }
+    // if (token) {
+    //   // In a real app, you would verify the token with the backend
+    //   // and get the user profile. For now, we'll just set a mock user.
+    //   setUser({ id: "1", name: "Researcher", email: "researcher@example.com" });
+    // }
+    //mock user without token
+    setUser({ id: "1", name: "Researcher", email: "researcher@example.com" });
     setLoading(false);
   }, []);
 

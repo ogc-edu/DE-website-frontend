@@ -45,7 +45,7 @@ const Layout = ({ children }) => {
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/" },
     { icon: PlayCircle, label: "Simulator", href: "/simulator" },
-    { icon: Database, label: "Data Management", href: "/data" },
+    { icon: Database, label: "Simulation History", href: "/data" },
     { icon: User, label: "Portfolio", href: "/portfolio" },
     { icon: Settings, label: "Account Settings", href: "/settings" },
   ];

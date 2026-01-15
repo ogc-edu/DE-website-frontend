@@ -5,6 +5,7 @@ import { SimulationProvider } from "./context/SimulationContext";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Simulator from "./components/Simulator";
 import "./App.css";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/simulator" element={<Simulator />} />
           </Routes>
         </Router>
       </SimulationProvider>

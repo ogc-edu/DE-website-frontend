@@ -1,6 +1,7 @@
 # Differential Evolution Research Dashboard
 
 A modern React-based web application to simulate and visualize the performance of different Differential Evolution (DE) algorithms across various benchmark fitness functions.
+static website hosting: http://de-website-frontend-deploy.s3-website-us-east-1.amazonaws.com/
 
 ## Features
 **This is a project still under development**

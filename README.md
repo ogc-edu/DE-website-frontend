@@ -21,7 +21,7 @@ The dashboard compares total 80 different Differential Evolution models by combi
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ogc-edu/DE-website-frontend
    cd de-research-dashboard
    ```
 
@@ -46,9 +46,3 @@ The dashboard compares total 80 different Differential Evolution models by combi
 - **AWS Services** - Cloud computing for simulation
 - **MongoDB** - NoSQL storage for simplicity and large data storage
 
-- [ ] Add statistical significance testing
-- [ ] Include convergence curves
-- [ ] Export charts as images
-- [ ] Add data import functionality
-- [ ] Include more benchmark functions
-- [ ] Add parameter sensitivity analysis
